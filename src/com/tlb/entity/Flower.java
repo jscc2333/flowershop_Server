@@ -7,10 +7,10 @@ public class Flower {
 	private String flowerImg;
 	private Integer flowerTotal;
 	private float flowerPrice;
-	private String category;
+	private Category category;
 
 	public Flower(Integer flowerID, String flowername, String flowerdesc, String flowerimg, Integer flowertotal,
-			float flowerprice, String category) {
+			float flowerprice, Category category) {
 		super();
 		this.flowerID = flowerID;
 		this.flowerName = flowername;
@@ -69,12 +69,11 @@ public class Flower {
 		this.flowerPrice = flowerprice;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
-
 }

@@ -2,7 +2,7 @@ package com.tlb.beans;
 
 import java.sql.*;
 
-public class UtilConnection {
+public class DBUtils {
 	public static Connection getConnection() {
 		Connection conn = null;
 		try {
