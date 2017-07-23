@@ -1,5 +1,6 @@
 package com.tlb.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -7,14 +8,17 @@ public class Order {
 	private int orderID;
 	private float orderTotal;
 	private Date orderTime;
-	private HashMap<Flower, Integer> flowerMap;
+	private String orderAddress;
 
-	public Order(int orderID, float orderTotal, Date orderTime, HashMap<Flower, Integer> flowerMap) {
+	private ArrayList<Flower> flowerList;
+
+	public Order(int orderID, float orderTotal, Date orderTime,String orderAddress, ArrayList<Flower> flowerList) {
 		super();
 		this.orderID = orderID;
 		this.orderTotal = orderTotal;
 		this.orderTime = orderTime;
-		this.flowerMap = flowerMap;
+		this.orderAddress = orderAddress;
+		this.flowerList = flowerList;
 	}
 
 	public int getOrderID() {
@@ -41,11 +45,19 @@ public class Order {
 		this.orderTime = orderTime;
 	}
 
-	public HashMap<Flower, Integer> getFlowerMap() {
-		return flowerMap;
+	public String getOrderAddress() {
+		return orderAddress;
 	}
 
-	public void setFlowerMap(HashMap<Flower, Integer> flowerMap) {
-		this.flowerMap = flowerMap;
+	public void setOrderAddress(String orderAddress) {
+		this.orderAddress = orderAddress;
+	}
+
+	public ArrayList<Flower> getFlowerList() {
+		return flowerList;
+	}
+
+	public void setFlowerList(ArrayList<Flower> flowerList) {
+		this.flowerList = flowerList;
 	}
 }

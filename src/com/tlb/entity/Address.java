@@ -2,14 +2,14 @@ package com.tlb.entity;
 
 public class Address {
 	private int addressID;
-	private String address;
+	private String addressname;
 	private String consignee;
 	private String phonenumber;
 
 	public Address(int addressID, String address, String consignee, String phonenumber) {
 		super();
 		this.addressID = addressID;
-		this.address = address;
+		this.addressname = address;
 		this.consignee = consignee;
 		this.phonenumber = phonenumber;
 	}
@@ -22,12 +22,12 @@ public class Address {
 		this.addressID = addressID;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getAddressname() {
+		return addressname;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAddressname(String address) {
+		this.addressname = address;
 	}
 
 	public String getConsignee() {

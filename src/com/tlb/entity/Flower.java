@@ -6,9 +6,17 @@ public class Flower {
 	private String flowerDesc;
 	private String flowerImg;
 	private Integer flowerTotal;
+	private Integer flowerNum;
 	private float flowerPrice;
 	private Category category;
-
+	
+	public Flower(String flowerName,float flowerPrice,String flowerImg,int flowerNum){
+		super();
+		this.flowerName = flowerName;
+		this.flowerImg = flowerImg;
+		this.flowerPrice = flowerPrice;
+		this.flowerNum = flowerNum;
+	}
 	public Flower(Integer flowerID, String flowername, String flowerdesc, String flowerimg, Integer flowertotal,
 			float flowerprice, Category category) {
 		super();

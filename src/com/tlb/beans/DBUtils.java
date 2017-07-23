@@ -3,6 +3,7 @@ package com.tlb.beans;
 import java.sql.*;
 
 public class DBUtils {
+	//建立数据库连接
 	public static Connection getConnection() {
 		Connection conn = null;
 		try {

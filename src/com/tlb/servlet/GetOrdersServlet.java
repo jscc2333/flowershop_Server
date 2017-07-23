@@ -1,6 +1,8 @@
 package com.tlb.servlet;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,21 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.tlb.beans.UserDao;
-import com.tlb.entity.User;
-import com.tlb.jsoninstance.HomeInstance;
+import com.tlb.beans.OrderDao;
+import com.tlb.entity.Order;
 
 /**
- * Servlet implementation class SignUpServlet
+ * Servlet implementation class GetOrdersServlet
  */
-@WebServlet("/SignUpServlet")
-public class SignUpServlet extends HttpServlet {
+@WebServlet("/GetOrdersServlet")
+public class GetOrdersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public SignUpServlet() {
+	public GetOrdersServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -36,9 +37,6 @@ public class SignUpServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		// doPost(request,response);
-		// System.out.print(request);
-		// System.out.print("doget");
 	}
 
 	/**
@@ -50,17 +48,16 @@ public class SignUpServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		// doGet(request, response);
 		response.setContentType("application/json;charset=utf-8");
+		response.setContentType("text/plain; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		String username = request.getParameter("username");
-		String password = request.getParameter("userpass");
-		System.out.print(username + password);
-		User user = new User(username, password);
-		UserDao userDao = new UserDao();
-		int status_no = userDao.signUp(user);
-		HomeInstance hi = new HomeInstance(status_no, null, null, null, null);
+		OrderDao orderDao = new OrderDao();
+		ArrayList<Order> orders = new ArrayList<Order>(0);
+		orders = orderDao.getOrders(username);
 		Gson gson = new Gson();
-		String json_hi = gson.toJson(hi);
-		out.write(json_hi);
+		String json_orders = gson.toJson(orders);
+		out.write(json_orders);
 		out.close();
 	}
+
 }

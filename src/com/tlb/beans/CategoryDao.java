@@ -13,17 +13,21 @@ public class CategoryDao {
 	private DataSource dataSource = null;
 
 	public ArrayList<Category> getCategory() {
+		//用ArrayList保存所有鲜花类别对象
 		ArrayList<Category> categories = new ArrayList<Category>(0);
 		Connection conn = DBUtils.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rst = null;
 		try {
+//			查询所有的鲜花类别
 			pstmt = conn.prepareStatement("SELECT *FROM category");
 			rst = pstmt.executeQuery();
 			while (rst.next()) {
 				int categoryID = rst.getInt("categoryID");
 				String categoryName = rst.getString("categoryName");
+				//实例化一个新的对象，来容纳数据
 				Category category = new Category(categoryID, categoryName);
+				//将数据填充到ArrayList中
 				categories.add(categories.size(), category);
 			}
 		} catch (Exception e) {
