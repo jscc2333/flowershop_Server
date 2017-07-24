@@ -5,19 +5,20 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Order {
+	private String username;
 	private int orderID;
+	private int addressID;
 	private float orderTotal;
 	private Date orderTime;
-	private String orderAddress;
-
 	private ArrayList<Flower> flowerList;
 
-	public Order(int orderID, float orderTotal, Date orderTime,String orderAddress, ArrayList<Flower> flowerList) {
+	public Order(String username, int orderID, int addressID, float orderTotal, Date orderTime,
+			ArrayList<Flower> flowerList) {
 		super();
 		this.orderID = orderID;
 		this.orderTotal = orderTotal;
 		this.orderTime = orderTime;
-		this.orderAddress = orderAddress;
+		this.addressID = addressID;
 		this.flowerList = flowerList;
 	}
 
@@ -45,19 +46,27 @@ public class Order {
 		this.orderTime = orderTime;
 	}
 
-	public String getOrderAddress() {
-		return orderAddress;
-	}
-
-	public void setOrderAddress(String orderAddress) {
-		this.orderAddress = orderAddress;
-	}
-
 	public ArrayList<Flower> getFlowerList() {
 		return flowerList;
 	}
 
 	public void setFlowerList(ArrayList<Flower> flowerList) {
 		this.flowerList = flowerList;
+	}
+
+	public int getAddressID() {
+		return addressID;
+	}
+
+	public void setAddressID(int addressID) {
+		this.addressID = addressID;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

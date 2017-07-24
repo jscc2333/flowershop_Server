@@ -12,19 +12,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.tlb.beans.OrderDao;
+import com.tlb.entity.Address;
 import com.tlb.entity.Order;
+import com.tlb.jsoninstance.AddressInstance;
 
 /**
- * Servlet implementation class GetOrdersServlet
+ * Servlet implementation class ConfAddressServlet
  */
-@WebServlet("/GetOrdersServlet")
-public class GetOrdersServlet extends HttpServlet {
+@WebServlet("/ConfAddressServlet")
+public class ConfAddressServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public GetOrdersServlet() {
+	public ConfAddressServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -51,13 +53,21 @@ public class GetOrdersServlet extends HttpServlet {
 		response.setContentType("text/plain; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		String username = request.getParameter("username");
-		OrderDao orderDao = new OrderDao();
-		ArrayList<Order> orders = new ArrayList<Order>(0);
-		orders = orderDao.getOrders(username);
-		Gson gson = new Gson();
-		String json_orders = gson.toJson(orders);
-		out.write(json_orders);
-		out.close();
+		String test = request.getParameter("test");
+		Gson gsonTemp = new Gson();
+		Address address = gsonTemp.fromJson(test, Address.class);
+		System.out.println(address.getAddressname() + address.getConsignee());
+		int operationType = Integer.parseInt(request.getParameter("operationType"));
+		switch (operationType) {
+		case -1:
+			OrderDao orderDao = new OrderDao();
+			ArrayList<Order> orderList = orderDao.getOrders(username);
+			Gson gson = new Gson();
+			String json_ol = gson.toJson(orderList);
+			out.write(json_ol);
+			break;
+		default:
+			out.close();
+		}
 	}
-
 }

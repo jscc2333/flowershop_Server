@@ -6,10 +6,10 @@ public class Address {
 	private String consignee;
 	private String phonenumber;
 
-	public Address(int addressID, String address, String consignee, String phonenumber) {
+	public Address(int addressID, String addressname, String consignee, String phonenumber) {
 		super();
 		this.addressID = addressID;
-		this.addressname = address;
+		this.addressname = addressname;
 		this.consignee = consignee;
 		this.phonenumber = phonenumber;
 	}

@@ -3,6 +3,7 @@ package com.tlb.beans;
 import javax.naming.InitialContext;
 import javax.sql.*;
 
+import com.tlb.entity.Address;
 import com.tlb.entity.Flower;
 import com.tlb.entity.Order;
 
@@ -31,7 +32,6 @@ public class OrderDao {
 			Order order = null;
 			rst.last();// 移动游标到最后
 			int rstLength = rst.getRow();
-			System.out.println(rstLength);
 			int rstCount = 1;
 			rst.beforeFirst();
 			; // 还原游标到rs开始
@@ -49,13 +49,16 @@ public class OrderDao {
 					String flowerName = rst.getString("flowerName");
 					String flowerImg = rst.getString("flowerImg");
 					float flowerPrice = rst.getFloat("flowerPrice");
-					String orderAddress = "";
+					Address address = null;
 					try {
 						PreparedStatement pstmtTemp = conn.prepareStatement("SELECT *FROM address WHERE addressID=?");
 						pstmtTemp.setInt(1, addressID);
 						ResultSet rstTemp = pstmtTemp.executeQuery();
 						if (rstTemp.next()) {
-							orderAddress = rstTemp.getString("addressname");
+							String consignee = rstTemp.getString("consignee");
+							String addressname = rstTemp.getString("addressname");
+							String phonenumber = rstTemp.getString("phonenumber");
+							address = new Address(addressID, addressname, consignee, phonenumber);
 						}
 					} catch (Exception e) {
 						System.out.print(e);
@@ -63,7 +66,7 @@ public class OrderDao {
 
 					Flower flower = new Flower(flowerName, flowerPrice, flowerImg, flowerNum);
 					flowerList.add(flowerList.size(), flower);
-					order = new Order(orderID, orderTotal, orderTime, orderAddress, flowerList);
+					order = new Order(username, orderID, addressID,orderTotal, orderTime, flowerList);
 					if (rstLength == 1) {
 						System.out.println("run to here yo");
 						orders.add(orders.size(), order);
@@ -82,7 +85,6 @@ public class OrderDao {
 						orders.add(orders.size(), order);
 					}
 					rstCount++;
-					System.out.println("flowerlist's size is" + flowerList.size());
 				}
 			}
 		} catch (Exception e) {
@@ -95,5 +97,25 @@ public class OrderDao {
 			}
 		}
 		return orders;
+	}
+
+	public int placeOrders(String username, Order order) {
+		Connection conn = DBUtils.getConnection();
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+
+		} catch (Exception e) {
+
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+
+			}
+		}
+		int status_no = 0;
+
+		return status_no;
 	}
 }
