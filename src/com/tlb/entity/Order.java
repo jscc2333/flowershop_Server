@@ -11,7 +11,7 @@ public class Order {
 	private float orderTotal;
 	private Date orderTime;
 	private ArrayList<Flower> flowerList;
-
+	
 	public Order(String username, int orderID, int addressID, float orderTotal, Date orderTime,
 			ArrayList<Flower> flowerList) {
 		super();

@@ -17,9 +17,9 @@ import com.tlb.entity.Order;
 import com.tlb.entity.Tip;
 import com.tlb.entity.User;
 import com.tlb.jsoninstance.HomeInstance;
+import com.tlb.utils.DBUtils;
 import com.google.gson.Gson;
 import com.tlb.beans.CategoryDao;
-import com.tlb.beans.DBUtils;
 import com.tlb.beans.FlowerDao;
 import com.tlb.beans.OrderDao;
 import com.tlb.beans.TipDao;
@@ -63,6 +63,7 @@ public class SignInServlet extends HttpServlet {
 		// doGet(request, response);
 		// response.getWriter().append("Served at:
 		// ").append(request.getContextPath());
+		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json;charset=utf-8");
 		response.setContentType("text/plain; charset=utf-8");
 		PrintWriter out = response.getWriter();
@@ -90,5 +91,4 @@ public class SignInServlet extends HttpServlet {
 		out.write(json_hi);
 		out.close();
 	}
-
 }

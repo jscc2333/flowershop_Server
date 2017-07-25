@@ -1,11 +1,15 @@
+
 package com.tlb.beans;
 
 import javax.naming.InitialContext;
 import javax.sql.*;
 
+import java.util.Date;
 import com.tlb.entity.Address;
 import com.tlb.entity.Flower;
 import com.tlb.entity.Order;
+import com.tlb.global.Global;
+import com.tlb.utils.DBUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -66,7 +70,7 @@ public class OrderDao {
 
 					Flower flower = new Flower(flowerName, flowerPrice, flowerImg, flowerNum);
 					flowerList.add(flowerList.size(), flower);
-					order = new Order(username, orderID, addressID,orderTotal, orderTime, flowerList);
+					order = new Order(username, orderID, addressID, orderTotal, orderTime, flowerList);
 					if (rstLength == 1) {
 						System.out.println("run to here yo");
 						orders.add(orders.size(), order);
@@ -99,23 +103,60 @@ public class OrderDao {
 		return orders;
 	}
 
-	public int placeOrders(String username, Order order) {
+	public int placeOrder(Order order) {
 		Connection conn = DBUtils.getConnection();
-		PreparedStatement pstmt = null;
+		PreparedStatement pstmtOrder = null;
+		int status_no = 0;
 		int result = 0;
+		int tableLength = 0;
 		try {
+			pstmtOrder = conn.prepareStatement("SELECT * FROM orders");
+			ResultSet rst = pstmtOrder.executeQuery();
+			rst.last();
+			tableLength = rst.getRow();
+			rst.beforeFirst();
+			pstmtOrder = conn.prepareStatement(
+					"INSERT INTO orders(addressID,orderID,username,orderTime,orderTotal)" + " VALUES(?,?,?,?,?)");
+			int orderID = tableLength + 1;
+			int addressID = order.getAddressID();
+			String username = order.getUsername();
+			Date orderTime = order.getOrderTime();
+			float orderTotal = order.getOrderTotal();
+
+			pstmtOrder.setInt(1, addressID);
+			pstmtOrder.setInt(2, orderID);
+			pstmtOrder.setString(3, username);
+			pstmtOrder.setDate(4, new java.sql.Date(orderTime.getTime()));
+			pstmtOrder.setFloat(5, orderTotal);
+			result += pstmtOrder.executeUpdate();
+
+			ArrayList<Flower> flowerList = order.getFlowerList();
+			Iterator flowerIt = flowerList.iterator();
+			while (flowerIt.hasNext()) {
+				Flower flower = (Flower) flowerIt.next();
+				int flowerNum = flower.getFlowerNum();
+				int flowerID = flower.getFlowerID();
+				PreparedStatement pstmtFlower = conn
+						.prepareStatement("UPDATE flower SET flowerTotal =" + " flowerTotal - ?" + " WHERE flowerID=?");
+				pstmtFlower.setInt(1, flowerNum);
+				pstmtFlower.setInt(2, flowerID);
+				result += pstmtFlower.executeUpdate();
+			}
+			if (result ==  flowerList.size()+1) {
+				status_no = Global.STATUS_OK;
+			} else {
+				status_no = Global.STATUS_ERR;
+			}
 
 		} catch (Exception e) {
-
+			System.out.println(e);
 		} finally {
 			try {
 				conn.close();
 			} catch (Exception e) {
-
+				System.out.println(e);
 			}
 		}
-		int status_no = 0;
-
 		return status_no;
 	}
 }

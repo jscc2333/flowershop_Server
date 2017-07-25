@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.tlb.entity.Address;
 import com.tlb.global.Global;
+import com.tlb.utils.DBUtils;
 
 public class AddressDao {
 	private static InitialContext context = null;
@@ -18,23 +19,28 @@ public class AddressDao {
 		int result = 0;
 		int status_no = 0;
 		try {
-			if (operationType == Global.ADDRESS_ADD) {
-				pstmt = conn.prepareStatement(
-						"INSERT address(addressID,username,consignee,addressname,phonenumber) " + "VALUES(?,?,?,?,?)");
-			} else if (operationType == Global.ADDRESS_UPDATE) {
-				pstmt = conn.prepareStatement(
-						"UPDATE address(addressID,username,consignee,addressname,phonenumber) " + "VALUES(?,?,?,?,?)");
-			} else {
-			}
 			int addressID = address.getAddressID();
 			String consignee = address.getConsignee();
 			String addressname = address.getAddressname();
 			String phonenumber = address.getPhonenumber();
-			pstmt.setInt(1, addressID);
-			pstmt.setString(2, username);
-			pstmt.setString(3, consignee);
-			pstmt.setString(4, addressname);
-			pstmt.setString(5, phonenumber);
+			if (operationType == Global.ADDRESS_ADD) {
+				pstmt = conn.prepareStatement(
+						"INSERT address(addressID,username,consignee,addressname,phonenumber) " + "VALUES(?,?,?,?,?)");
+				pstmt.setInt(1, addressID);
+				pstmt.setString(2, username);
+				pstmt.setString(3, consignee);
+				pstmt.setString(4, addressname);
+				pstmt.setString(5, phonenumber);
+			} else if (operationType == Global.ADDRESS_UPDATE) {
+				pstmt = conn.prepareStatement(
+						"UPDATE address SET consignee=?,addressname=?,phonenumber=? WHERE addressID=? AND username=?");
+				pstmt.setString(1, consignee);
+				pstmt.setString(2, addressname);
+				pstmt.setString(3, phonenumber);
+				pstmt.setInt(4, addressID);
+				pstmt.setString(5, username);
+			} else {
+			}
 			result = pstmt.executeUpdate();
 			if (result > 0) {
 				status_no = Global.STATUS_OK;

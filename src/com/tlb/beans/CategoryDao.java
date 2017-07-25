@@ -7,6 +7,7 @@ import javax.naming.InitialContext;
 import javax.sql.*;
 
 import com.tlb.entity.Category;
+import com.tlb.utils.DBUtils;
 
 public class CategoryDao {
 	private static InitialContext context = null;

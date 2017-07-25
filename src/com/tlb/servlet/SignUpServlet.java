@@ -49,6 +49,7 @@ public class SignUpServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// doGet(request, response);
+		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json;charset=utf-8");
 		PrintWriter out = response.getWriter();
 		String username = request.getParameter("username");

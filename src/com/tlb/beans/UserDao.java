@@ -5,6 +5,7 @@ import javax.naming.*;
 import javax.sql.*;
 
 import com.tlb.global.*;
+import com.tlb.utils.DBUtils;
 import com.tlb.entity.User;
 
 public class UserDao {

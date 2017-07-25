@@ -7,6 +7,7 @@ import javax.sql.*;
 import java.sql.*;
 
 import com.tlb.entity.Tip;
+import com.tlb.utils.DBUtils;
 
 public class TipDao {
 
