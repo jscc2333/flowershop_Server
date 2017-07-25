@@ -12,6 +12,7 @@ import com.tlb.entity.Tip;
 
 public class HomeInstance {
 	private int status_no;//保存状态码
+	private int request_time;
 	private ArrayList<Category> categories;//保存鲜花分类
 	private ArrayList<Flower> flowers;//保存鲜花
 	private ArrayList<Order> orders;

@@ -7,4 +7,5 @@ public class Global {
 	public static final int USERNAME_ERR = 3;// 用户名不存在状态码
 	public static final int ADDRESS_ADD = 0;// 添加地址类别码
 	public static final int ADDRESS_UPDATE = 1;// 更新地址类别码
+	public static final int ADDRESS_DELETE = 2;//删除地址类别码
 }

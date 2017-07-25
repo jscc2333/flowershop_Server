@@ -62,7 +62,8 @@ public class OrderDao {
 							String consignee = rstTemp.getString("consignee");
 							String addressname = rstTemp.getString("addressname");
 							String phonenumber = rstTemp.getString("phonenumber");
-							address = new Address(addressID, addressname, consignee, phonenumber);
+							Boolean defaultAddress = rstTemp.getBoolean("defaultAddress");
+							address = new Address(addressID, addressname, consignee, phonenumber,defaultAddress);
 						}
 					} catch (Exception e) {
 						System.out.print(e);

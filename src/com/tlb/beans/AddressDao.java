@@ -23,28 +23,73 @@ public class AddressDao {
 			String consignee = address.getConsignee();
 			String addressname = address.getAddressname();
 			String phonenumber = address.getPhonenumber();
+			Boolean defaultAddress = address.getDefaultAddress();
 			if (operationType == Global.ADDRESS_ADD) {
+				try {
+					PreparedStatement pstmtTemp = conn.prepareStatement("SELECT addressID FROM address");
+					ResultSet rstTemp = pstmtTemp.executeQuery();
+					rstTemp.last();
+					addressID = rstTemp.getRow() + 1;
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				if (defaultAddress) {
+					try {
+						PreparedStatement pstmtTemp = conn
+								.prepareStatement("UPDATE address SET defaultAddress = false");
+						pstmtTemp.executeUpdate();
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				}
 				pstmt = conn.prepareStatement(
-						"INSERT address(addressID,username,consignee,addressname,phonenumber) " + "VALUES(?,?,?,?,?)");
+						"INSERT address(addressID,username,consignee,addressname,phonenumber,defaultAddress) "
+								+ "VALUES(?,?,?,?,?,?)");
 				pstmt.setInt(1, addressID);
 				pstmt.setString(2, username);
 				pstmt.setString(3, consignee);
 				pstmt.setString(4, addressname);
 				pstmt.setString(5, phonenumber);
+				pstmt.setBoolean(6, defaultAddress);
 			} else if (operationType == Global.ADDRESS_UPDATE) {
+				try {
+					PreparedStatement pstmtTemp = conn.prepareStatement("SELECT addressID FROM address");
+					ResultSet rstTemp = pstmtTemp.executeQuery();
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				if (defaultAddress) {
+					try {
+						PreparedStatement pstmtTemp = conn
+								.prepareStatement("UPDATE address SET defaultAddress = false");
+						pstmtTemp.executeUpdate();
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				}
 				pstmt = conn.prepareStatement(
-						"UPDATE address SET consignee=?,addressname=?,phonenumber=? WHERE addressID=? AND username=?");
+						"UPDATE address SET consignee=?,addressname=?,phonenumber=?,defaultAddress=? WHERE addressID=? AND username=?");
 				pstmt.setString(1, consignee);
 				pstmt.setString(2, addressname);
 				pstmt.setString(3, phonenumber);
-				pstmt.setInt(4, addressID);
-				pstmt.setString(5, username);
-			} else {
-			}
-			result = pstmt.executeUpdate();
-			if (result > 0) {
-				status_no = Global.STATUS_OK;
-				return status_no;
+				pstmt.setBoolean(4, defaultAddress);
+				pstmt.setInt(5, addressID);
+				pstmt.setString(6, username);
+				result = pstmt.executeUpdate();
+				if (result > 0) {
+					status_no = Global.STATUS_OK;
+					return status_no;
+				}
+			} else if (operationType == Global.ADDRESS_DELETE) {
+				try {
+					pstmt = conn.prepareStatement("DELETE FROM address WHERE addressID = ?");
+					pstmt.setInt(1, addressID);
+					pstmt.executeUpdate();
+					result = pstmt.executeUpdate();
+					status_no = Global.STATUS_OK;
+				} catch (Exception e) {
+					System.out.println(e);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -72,7 +117,8 @@ public class AddressDao {
 				String addressname = rst.getString("addressname");
 				String consignee = rst.getString("consignee");
 				String phonenumber = rst.getString("phonenumber");
-				Address address = new Address(addressID, addressname, consignee, phonenumber);
+				Boolean defaultAddress = rst.getBoolean("defaultAddress");
+				Address address = new Address(addressID, addressname, consignee, phonenumber, defaultAddress);
 				addressList.add(addressList.size(), address);
 			}
 		} catch (Exception e) {
