@@ -22,6 +22,9 @@ public class TipDao {
 		try {
 			pstmt = conn.prepareStatement("SELECT *FROM livingtip");
 			rst = pstmt.executeQuery();
+			if (!rst.next()) {
+				return null;
+			}
 			while (rst.next()) {
 				int tipID = rst.getInt("tipID");
 				String title = rst.getString("title");

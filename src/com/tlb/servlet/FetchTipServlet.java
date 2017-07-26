@@ -62,7 +62,7 @@ public class FetchTipServlet extends HttpServlet {
 			TipDao tipDao = new TipDao();
 			ArrayList<Tip> tipList = tipDao.getTips();
 			TipInstance tiTemp = null;
-			if (tipList.size() > 0) {
+			if (tipList != null) {
 				tiTemp = new TipInstance(Global.STATUS_OK, tipList);
 			} else {
 				tiTemp = new TipInstance(Global.STATUS_ERR, null);

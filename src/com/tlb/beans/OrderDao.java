@@ -34,11 +34,15 @@ public class OrderDao {
 			int orderIDLast = -1;
 			ArrayList<Flower> flowerList = new ArrayList<Flower>(0);
 			Order order = null;
-			rst.last();// 移动游标到最后
-			int rstLength = rst.getRow();
+			int rstLength;
 			int rstCount = 1;
-			rst.beforeFirst();
-			; // 还原游标到rs开始
+			if (rst.next()) {
+				rst.last();// 移动游标到最后
+				rstLength = rst.getRow();
+				rst.beforeFirst();// 还原游标到rs开始
+			} else {
+				return null;
+			}
 			while (rst.next()) {
 				int orderID = rst.getInt("orderID");
 				if (orderID != orderIDLast) {
@@ -73,7 +77,6 @@ public class OrderDao {
 					flowerList.add(flowerList.size(), flower);
 					order = new Order(orderID, username, address, orderTotal, orderTime, flowerList);
 					if (rstLength == 1) {
-						System.out.println("run to here yo");
 						orders.add(orders.size(), order);
 					}
 					orderIDLast = orderID;
@@ -113,7 +116,6 @@ public class OrderDao {
 			System.out.println("run to here at 0");
 			pstmtOrder = conn.prepareStatement("SELECT * FROM orders");
 			ResultSet rst = pstmtOrder.executeQuery();
-			System.out.println("run to here at 0.1");
 			int orderID = 0;
 			if (rst.next()) {
 				rst.last();
@@ -122,7 +124,6 @@ public class OrderDao {
 			} else {
 				orderID = 1;
 			}
-			System.out.println("run to here at 0.2");
 			pstmtOrder = conn.prepareStatement(
 					"INSERT INTO orders(addressID,orderID,username,orderTime,orderTotal)" + " VALUES(?,?,?,?,?)");
 			int addressID = order.getAddress().getAddressID();
@@ -134,7 +135,6 @@ public class OrderDao {
 			pstmtOrder.setString(3, username);
 			pstmtOrder.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 			pstmtOrder.setFloat(5, orderTotal);
-			System.out.println("run to here at 1");
 			result += pstmtOrder.executeUpdate();
 			ArrayList<Flower> flowerList = order.getFlowerList();
 			Iterator flowerIt = flowerList.iterator();
@@ -146,7 +146,6 @@ public class OrderDao {
 						.prepareStatement("UPDATE flower SET flowerTotal =" + " flowerTotal - ?" + " WHERE flowerID=?");
 				pstmtFlower.setInt(1, flowerNum);
 				pstmtFlower.setInt(2, flowerID);
-				System.out.println("run to here at 2");
 				result += pstmtFlower.executeUpdate();
 
 				PreparedStatement pstmtFlowerOrders = conn
@@ -154,7 +153,6 @@ public class OrderDao {
 				pstmtFlowerOrders.setInt(1, flowerID);
 				pstmtFlowerOrders.setInt(2, orderID);
 				pstmtFlowerOrders.setInt(3, flowerNum);
-				System.out.println("run to here at 3");
 				result += pstmtFlowerOrders.executeUpdate();
 			}
 			if (result == flowerList.size() * 2 + 1) {
