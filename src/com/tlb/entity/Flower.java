@@ -16,8 +16,9 @@ public class Flower {
 		this.setFlowerNum(flowerNum);
 	}
 
-	public Flower(String flowerName, float flowerPrice, String flowerImg, int flowerNum) {
+	public Flower(int flowerID, String flowerName, float flowerPrice, String flowerImg, int flowerNum) {
 		super();
+		this.flowerID = flowerID;
 		this.flowerName = flowerName;
 		this.flowerImg = flowerImg;
 		this.flowerPrice = flowerPrice;

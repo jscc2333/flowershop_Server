@@ -24,5 +24,4 @@ public class TipInstance {
 	public void setTipList(ArrayList<Tip> tipList) {
 		this.tipList = tipList;
 	}
-	
 }

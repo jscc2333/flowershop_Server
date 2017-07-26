@@ -5,6 +5,8 @@ import javax.naming.InitialContext;
 import javax.sql.*;
 
 import java.util.Date;
+
+import com.google.gson.Gson;
 import com.tlb.entity.Address;
 import com.tlb.entity.Flower;
 import com.tlb.entity.Order;
@@ -47,13 +49,14 @@ public class OrderDao {
 				int orderID = rst.getInt("orderID");
 				if (orderID != orderIDLast) {
 					if (order != null) {
-						orders.add(orders.size(), order);
+						orders.add(order);
 					}
-					flowerList.clear();
+					flowerList = new ArrayList<Flower>(0);
 					float orderTotal = rst.getFloat("orderTotal");
-					Date orderTime = rst.getDate("orderTime");
+					Date orderTime = rst.getTimestamp("orderTime");
 					int addressID = rst.getInt("addressID");
 					int flowerNum = rst.getInt("flowerNum");
+					int flowerID = rst.getInt("flowerID");
 					String flowerName = rst.getString("flowerName");
 					String flowerImg = rst.getString("flowerImg");
 					float flowerPrice = rst.getFloat("flowerPrice");
@@ -73,22 +76,26 @@ public class OrderDao {
 						System.out.print(e);
 					}
 
-					Flower flower = new Flower(flowerName, flowerPrice, flowerImg, flowerNum);
-					flowerList.add(flowerList.size(), flower);
+					Flower flower = new Flower(flowerID, flowerName, flowerPrice, flowerImg, flowerNum);
+					flowerList.add(flower);
 					order = new Order(orderID, username, address, orderTotal, orderTime, flowerList);
-					if (rstLength == 1) {
+					if (!rst.next() || rstLength == 1) {
 						orders.add(orders.size(), order);
+						break;
 					}
+					rst.previous();
 					orderIDLast = orderID;
 					rstCount++;
 				} else if (orderID == orderIDLast) {
+					int flowerID = rst.getInt("flowerID");
 					int flowerNum = rst.getInt("flowerNum");
 					String flowerName = rst.getString("flowerName");
 					String flowerImg = rst.getString("flowerImg");
 					float flowerPrice = rst.getFloat("flowerPrice");
-					Flower flower = new Flower(flowerName, flowerPrice, flowerImg, flowerNum);
+					Flower flower = new Flower(flowerID, flowerName, flowerPrice, flowerImg, flowerNum);
 					flowerList.add(flower);
 					order.setFlowerList(flowerList);
+
 					if (rstCount == rstLength) {
 						orders.add(orders.size(), order);
 					}
@@ -113,7 +120,6 @@ public class OrderDao {
 		int status_no = 0;
 		int result = 0;
 		try {
-			System.out.println("run to here at 0");
 			pstmtOrder = conn.prepareStatement("SELECT * FROM orders");
 			ResultSet rst = pstmtOrder.executeQuery();
 			int orderID = 0;
