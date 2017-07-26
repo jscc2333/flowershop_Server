@@ -59,8 +59,8 @@ public class Order {
 		return address;
 	}
 
-	public void setAddressID(int addressID) {
-		this.address = addressID;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public String getUsername() {

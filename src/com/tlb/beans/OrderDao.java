@@ -71,7 +71,7 @@ public class OrderDao {
 
 					Flower flower = new Flower(flowerName, flowerPrice, flowerImg, flowerNum);
 					flowerList.add(flowerList.size(), flower);
-					order = new Order(orderID, username, addressID, orderTotal, orderTime, flowerList);
+					order = new Order(orderID, username, address, orderTotal, orderTime, flowerList);
 					if (rstLength == 1) {
 						System.out.println("run to here yo");
 						orders.add(orders.size(), order);
@@ -110,8 +110,10 @@ public class OrderDao {
 		int status_no = 0;
 		int result = 0;
 		try {
+			System.out.println("run to here at 0");
 			pstmtOrder = conn.prepareStatement("SELECT * FROM orders");
 			ResultSet rst = pstmtOrder.executeQuery();
+			System.out.println("run to here at 0.1");
 			int orderID = 0;
 			if (rst.next()) {
 				rst.last();
@@ -120,9 +122,10 @@ public class OrderDao {
 			} else {
 				orderID = 1;
 			}
+			System.out.println("run to here at 0.2");
 			pstmtOrder = conn.prepareStatement(
 					"INSERT INTO orders(addressID,orderID,username,orderTime,orderTotal)" + " VALUES(?,?,?,?,?)");
-			int addressID = order.getAddressID();
+			int addressID = order.getAddress().getAddressID();
 			String username = order.getUsername();
 			float orderTotal = order.getOrderTotal();
 
@@ -131,6 +134,7 @@ public class OrderDao {
 			pstmtOrder.setString(3, username);
 			pstmtOrder.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 			pstmtOrder.setFloat(5, orderTotal);
+			System.out.println("run to here at 1");
 			result += pstmtOrder.executeUpdate();
 			ArrayList<Flower> flowerList = order.getFlowerList();
 			Iterator flowerIt = flowerList.iterator();
@@ -142,6 +146,7 @@ public class OrderDao {
 						.prepareStatement("UPDATE flower SET flowerTotal =" + " flowerTotal - ?" + " WHERE flowerID=?");
 				pstmtFlower.setInt(1, flowerNum);
 				pstmtFlower.setInt(2, flowerID);
+				System.out.println("run to here at 2");
 				result += pstmtFlower.executeUpdate();
 
 				PreparedStatement pstmtFlowerOrders = conn
@@ -149,6 +154,7 @@ public class OrderDao {
 				pstmtFlowerOrders.setInt(1, flowerID);
 				pstmtFlowerOrders.setInt(2, orderID);
 				pstmtFlowerOrders.setInt(3, flowerNum);
+				System.out.println("run to here at 3");
 				result += pstmtFlowerOrders.executeUpdate();
 			}
 			if (result == flowerList.size() * 2 + 1) {

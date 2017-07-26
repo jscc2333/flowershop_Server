@@ -51,17 +51,27 @@ public class PlaceOrderServlet extends HttpServlet {
 		response.setContentType("application/json;charset=utf-8");
 		response.setContentType("text/plain; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		int status_no = 0;
 		Gson gson = new Gson();
-		String json_order = request.getParameter("order");
-		System.out.println(json_order);
-		Order order = gson.fromJson(json_order, Order.class);
-		System.out.println(order);
+		int status_no = 0;
+		String json_request = request.getParameter("json_request");
+		System.out.println(json_request);
+		Order order = gson.fromJson(json_request, Order.class);
+		System.out.println(gson.toJson(order.getAddress()));
 		OrderDao orderDao = new OrderDao();
 		status_no = orderDao.placeOrder(order);
 		StatusInstance si = new StatusInstance(status_no);
-		String json_si = gson.toJson(si);
-		out.write(json_si);
+		String json_response = gson.toJson(si);
+		out.write(json_response);
+		out.close();
+		// String json_order = request.getParameter("order");
+		// System.out.println(json_order);
+		// Order order = gson.fromJson(json_order, Order.class);
+		// System.out.println(order);
+		// OrderDao orderDao = new OrderDao();
+		// status_no = orderDao.placeOrder(order);
+		// StatusInstance si = new StatusInstance(status_no);
+		// String json_si = gson.toJson(si);
+		// out.write(json_si);
 		out.close();
 	}
 
