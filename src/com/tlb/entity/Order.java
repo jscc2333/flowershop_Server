@@ -7,17 +7,17 @@ import java.util.HashMap;
 public class Order {
 	private int orderID;
 	private String username;
-	private int addressID;
+	private Address address;
 	private float orderTotal;
 	private Date orderTime;
 	private ArrayList<Flower> flowerList;
 
-	public Order(int orderID, String username, int addressID, float orderTotal, Date orderTime,
+	public Order(int orderID, String username, Address address, float orderTotal, Date orderTime,
 			ArrayList<Flower> flowerList) {
 		super();
 		this.orderID = orderID;
 		this.username = username;
-		this.addressID = addressID;
+		this.address = address;
 		this.orderTotal = orderTotal;
 		this.orderTime = orderTime;
 		this.flowerList = flowerList;
@@ -55,12 +55,12 @@ public class Order {
 		this.flowerList = flowerList;
 	}
 
-	public int getAddressID() {
-		return addressID;
+	public Address getAddress() {
+		return address;
 	}
 
 	public void setAddressID(int addressID) {
-		this.addressID = addressID;
+		this.address = addressID;
 	}
 
 	public String getUsername() {
