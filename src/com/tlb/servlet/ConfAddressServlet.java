@@ -56,24 +56,25 @@ public class ConfAddressServlet extends HttpServlet {
 		response.setContentType("application/json;charset=utf-8");
 		response.setContentType("text/plain; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		String username = request.getParameter("username");
-		String json_address = request.getParameter("address");
-		int operationType = Integer.parseInt(request.getParameter("operationType"));
 		Gson gson = new Gson();
-		if (operationType == -1) {
+		String json_request = request.getParameter("json_request");
+		AddressInstance ai = (AddressInstance) gson.fromJson(json_request, AddressInstance.class);
+		String username = ai.getUsername();
+		Address address = ai.getAddress();
+		if (ai.getStatus_no() == -1) {
 			// 获取个人收货信息
 			AddressDao addressDao = new AddressDao();
-			ArrayList<Address> addressList = addressDao.getAddress(username);
-			String json_ol = gson.toJson(addressList);
-			out.write(json_ol);
+			ArrayList<Address> addressList = addressDao.getAddress(ai.getUsername());
+			AddressInstance aiTemp = new AddressInstance(Global.STATUS_OK, null, null, addressList);
+			String json_response = gson.toJson(aiTemp);
+			out.write(json_response);
 		} else {
 			// 配置个人收货信息
+			System.out.println(json_request);
 			AddressDao addressDao = new AddressDao();
-			Address address = gson.fromJson(json_address, Address.class);
-			int status_no = addressDao.configAddress(username, address, operationType);
-			StatusInstance si = new StatusInstance(status_no);
-			String json_si = gson.toJson(si);
-			out.write(json_si);
+			AddressInstance aiTemp = addressDao.configAddress(username, address, ai.getStatus_no());
+			String json_response = gson.toJson(aiTemp);
+			out.write(json_response);
 		}
 		out.close();
 	}

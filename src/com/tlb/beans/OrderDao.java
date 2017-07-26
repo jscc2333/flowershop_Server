@@ -63,7 +63,7 @@ public class OrderDao {
 							String addressname = rstTemp.getString("addressname");
 							String phonenumber = rstTemp.getString("phonenumber");
 							Boolean defaultAddress = rstTemp.getBoolean("defaultAddress");
-							address = new Address(addressID, addressname, consignee, phonenumber,defaultAddress);
+							address = new Address(addressID, addressname, consignee, phonenumber, defaultAddress);
 						}
 					} catch (Exception e) {
 						System.out.print(e);
@@ -71,7 +71,7 @@ public class OrderDao {
 
 					Flower flower = new Flower(flowerName, flowerPrice, flowerImg, flowerNum);
 					flowerList.add(flowerList.size(), flower);
-					order = new Order(username, orderID, addressID, orderTotal, orderTime, flowerList);
+					order = new Order(orderID, username, addressID, orderTotal, orderTime, flowerList);
 					if (rstLength == 1) {
 						System.out.println("run to here yo");
 						orders.add(orders.size(), order);
@@ -109,28 +109,29 @@ public class OrderDao {
 		PreparedStatement pstmtOrder = null;
 		int status_no = 0;
 		int result = 0;
-		int tableLength = 0;
 		try {
 			pstmtOrder = conn.prepareStatement("SELECT * FROM orders");
 			ResultSet rst = pstmtOrder.executeQuery();
-			rst.last();
-			tableLength = rst.getRow();
-			rst.beforeFirst();
+			int orderID = 0;
+			if (rst.next()) {
+				rst.last();
+				orderID = rst.getInt("orderID") + 1;
+				rst.beforeFirst();
+			} else {
+				orderID = 1;
+			}
 			pstmtOrder = conn.prepareStatement(
 					"INSERT INTO orders(addressID,orderID,username,orderTime,orderTotal)" + " VALUES(?,?,?,?,?)");
-			int orderID = tableLength + 1;
 			int addressID = order.getAddressID();
 			String username = order.getUsername();
-			Date orderTime = order.getOrderTime();
 			float orderTotal = order.getOrderTotal();
 
 			pstmtOrder.setInt(1, addressID);
 			pstmtOrder.setInt(2, orderID);
 			pstmtOrder.setString(3, username);
-			pstmtOrder.setDate(4, new java.sql.Date(orderTime.getTime()));
+			pstmtOrder.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 			pstmtOrder.setFloat(5, orderTotal);
 			result += pstmtOrder.executeUpdate();
-
 			ArrayList<Flower> flowerList = order.getFlowerList();
 			Iterator flowerIt = flowerList.iterator();
 			while (flowerIt.hasNext()) {
@@ -142,8 +143,15 @@ public class OrderDao {
 				pstmtFlower.setInt(1, flowerNum);
 				pstmtFlower.setInt(2, flowerID);
 				result += pstmtFlower.executeUpdate();
+
+				PreparedStatement pstmtFlowerOrders = conn
+						.prepareStatement("INSERT INTO flower_orders(flowerID,orderID," + "flowerNum) VALUES(?,?,?)");
+				pstmtFlowerOrders.setInt(1, flowerID);
+				pstmtFlowerOrders.setInt(2, orderID);
+				pstmtFlowerOrders.setInt(3, flowerNum);
+				result += pstmtFlowerOrders.executeUpdate();
 			}
-			if (result ==  flowerList.size()+1) {
+			if (result == flowerList.size() * 2 + 1) {
 				status_no = Global.STATUS_OK;
 			} else {
 				status_no = Global.STATUS_ERR;

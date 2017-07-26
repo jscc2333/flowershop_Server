@@ -5,20 +5,21 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Order {
-	private String username;
 	private int orderID;
+	private String username;
 	private int addressID;
 	private float orderTotal;
 	private Date orderTime;
 	private ArrayList<Flower> flowerList;
-	
-	public Order(String username, int orderID, int addressID, float orderTotal, Date orderTime,
+
+	public Order(int orderID, String username, int addressID, float orderTotal, Date orderTime,
 			ArrayList<Flower> flowerList) {
 		super();
 		this.orderID = orderID;
+		this.username = username;
+		this.addressID = addressID;
 		this.orderTotal = orderTotal;
 		this.orderTime = orderTime;
-		this.addressID = addressID;
 		this.flowerList = flowerList;
 	}
 

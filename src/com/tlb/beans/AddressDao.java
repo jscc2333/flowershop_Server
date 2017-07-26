@@ -1,3 +1,4 @@
+
 package com.tlb.beans;
 
 import javax.naming.InitialContext;
@@ -7,13 +8,14 @@ import java.util.ArrayList;
 
 import com.tlb.entity.Address;
 import com.tlb.global.Global;
+import com.tlb.jsoninstance.AddressInstance;
 import com.tlb.utils.DBUtils;
 
 public class AddressDao {
 	private static InitialContext context = null;
 	private DataSource dataSource = null;
 
-	public int configAddress(String username, Address address, int operationType) {
+	public AddressInstance configAddress(String username, Address address, int operationType) {
 		Connection conn = DBUtils.getConnection();
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -29,7 +31,7 @@ public class AddressDao {
 					PreparedStatement pstmtTemp = conn.prepareStatement("SELECT addressID FROM address");
 					ResultSet rstTemp = pstmtTemp.executeQuery();
 					rstTemp.last();
-					addressID = rstTemp.getRow() + 1;
+					addressID = rstTemp.getInt("addressID") + 1;
 				} catch (Exception e) {
 					System.out.println(e);
 				}
@@ -51,6 +53,13 @@ public class AddressDao {
 				pstmt.setString(4, addressname);
 				pstmt.setString(5, phonenumber);
 				pstmt.setBoolean(6, defaultAddress);
+				result = pstmt.executeUpdate();
+				if (result > 0) {
+					ArrayList<Address> addressList = getAddress(username);
+					status_no = Global.STATUS_OK;
+					AddressInstance ai = new AddressInstance(status_no,null,null,addressList);
+					return ai;
+				}
 			} else if (operationType == Global.ADDRESS_UPDATE) {
 				try {
 					PreparedStatement pstmtTemp = conn.prepareStatement("SELECT addressID FROM address");
@@ -77,8 +86,10 @@ public class AddressDao {
 				pstmt.setString(6, username);
 				result = pstmt.executeUpdate();
 				if (result > 0) {
+					ArrayList<Address> addressList = getAddress(username);
 					status_no = Global.STATUS_OK;
-					return status_no;
+					AddressInstance ai = new AddressInstance(status_no,null,null,addressList);
+					return ai;
 				}
 			} else if (operationType == Global.ADDRESS_DELETE) {
 				try {
@@ -86,7 +97,12 @@ public class AddressDao {
 					pstmt.setInt(1, addressID);
 					pstmt.executeUpdate();
 					result = pstmt.executeUpdate();
-					status_no = Global.STATUS_OK;
+					if(result>0){
+						status_no = Global.STATUS_OK;	
+					}
+					ArrayList<Address> addressList = getAddress(username);
+					AddressInstance ai = new AddressInstance(status_no,null,null,addressList);
+					return ai;
 				} catch (Exception e) {
 					System.out.println(e);
 				}
@@ -100,7 +116,7 @@ public class AddressDao {
 				System.out.print(e);
 			}
 		}
-		return status_no;
+		return new AddressInstance(status_no,null,null,null);
 	}
 
 	public ArrayList<Address> getAddress(String username) {
