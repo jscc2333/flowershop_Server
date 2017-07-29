@@ -74,7 +74,7 @@ public class FlowerManageServlet extends HttpServlet {
 		FlowerDao flowerDao = new FlowerDao();
 		StatusInstance si = null;
 		if (status_no == 0) {
-			si = new StatusInstance(flowerDao.insertFlowers(flower));
+			si = new StatusInstance(flowerDao.insertFlower(flower));
 		} else if (status_no == 1) {
 			si = new StatusInstance(flowerDao.updateFlower(flower));
 		} else {

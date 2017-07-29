@@ -122,7 +122,7 @@ public class FlowerDao {
 		return flowers;
 	}
 
-	public int insertFlowers(Flower flower) {
+	public int insertFlower(Flower flower) {
 		int status = 0;
 		Connection conn = DBUtils.getConnection();
 		PreparedStatement pstmt = null;
