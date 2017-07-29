@@ -9,6 +9,7 @@ import javax.sql.*;
 
 import com.tlb.entity.Category;
 import com.tlb.entity.Flower;
+import com.tlb.global.Global;
 import com.tlb.utils.DBUtils;
 
 public class FlowerDao {
@@ -119,5 +120,105 @@ public class FlowerDao {
 			}
 		}
 		return flowers;
+	}
+
+	public int insertFlowers(Flower flower) {
+		int status = 0;
+		Connection conn = DBUtils.getConnection();
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			int flowerID = 0;
+			try {
+				PreparedStatement pstmtTemp = conn.prepareStatement("SELECT * FROM flower");
+				ResultSet rst = pstmtTemp.executeQuery();
+				if (rst.next()) {
+					rst.last();
+					flowerID = rst.getRow() + 1;
+				} else {
+					flowerID = 1;
+				}
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+
+			pstmt = conn.prepareStatement("INSERT INTO flower(flowerID,categoryID,flowerName,"
+					+ "flowerDesc,flowerImg,flowerTotal,flowerPrice) VALUES (?,?,?,?,?,?,?)");
+			pstmt.setInt(1, flowerID);
+			pstmt.setInt(2, flower.getCategory().getCategoryID());
+			pstmt.setString(3, flower.getFlowername());
+			pstmt.setString(4, flower.getFlowerdesc());
+			pstmt.setString(5, flower.getFlowerimg());
+			pstmt.setInt(6, flower.getFlowertotal());
+			pstmt.setFloat(7, flower.getFlowerprice());
+			result = pstmt.executeUpdate();
+			if (result > 0) {
+				status = Global.STATUS_OK;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		return status;
+	}
+
+	public int updateFlower(Flower flower) {
+		int status_no = 0;
+		Connection conn = DBUtils.getConnection();
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement("UPDATE flower SET categoryID=?,flowerName=?,flowerDesc=?,flowerImg=?,"
+					+ "flowerTotal=?,flowerPrice=? WHERE flowerID=?");
+			pstmt.setInt(1, flower.getCategory().getCategoryID());
+			pstmt.setString(2, flower.getFlowername());
+			pstmt.setString(3, flower.getFlowerdesc());
+			pstmt.setString(4, flower.getFlowerimg());
+			pstmt.setInt(5, flower.getFlowertotal());
+			pstmt.setFloat(6, flower.getFlowerprice());
+			pstmt.setInt(7, flower.getFlowerID());
+			result = pstmt.executeUpdate();
+			if (result > 0) {
+				status_no = 1;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		return status_no;
+	}
+
+	public int deleteFlower(Flower flower) {
+		int status_no = 0;
+		Connection conn = DBUtils.getConnection();
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement("DELETE FROM flower WHERE flowerID = ?");
+			pstmt.setInt(1, flower.getFlowerID());
+			result = pstmt.executeUpdate();
+			if (result > 0) {
+				status_no = Global.STATUS_OK;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+		return status_no;
 	}
 }

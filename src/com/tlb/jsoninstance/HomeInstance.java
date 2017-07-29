@@ -15,16 +15,11 @@ public class HomeInstance {
 	private int request_time;
 	private ArrayList<Category> categories;//保存鲜花分类
 	private ArrayList<Flower> flowers;//保存鲜花
-	private ArrayList<Order> orders;
-	private ArrayList<Tip> tips;
-	public HomeInstance(int status_no, ArrayList<Category> categories,ArrayList<Flower> flowers,
-			ArrayList<Order> orders,ArrayList<Tip> tips) {
+	public HomeInstance(int status_no, ArrayList<Category> categories,ArrayList<Flower> flowers) {
 		super();
 		this.status_no = status_no;
 		this.categories = categories;
 		this.flowers = flowers;
-		this.setOrders(orders);
-		this.setTips(tips);
 	}
 	public int getStatus_no() {
 		return status_no;
@@ -43,17 +38,5 @@ public class HomeInstance {
 	}
 	public void setFlowers(ArrayList<Flower> flowers) {
 		this.flowers = flowers;
-	}
-	public ArrayList<Tip> getTips() {
-		return tips;
-	}
-	public void setTips(ArrayList<Tip> tips) {
-		this.tips = tips;
-	}
-	public ArrayList<Order> getOrders() {
-		return orders;
-	}
-	public void setOrders(ArrayList<Order> orders) {
-		this.orders = orders;
 	}
 }

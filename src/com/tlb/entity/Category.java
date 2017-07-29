@@ -8,6 +8,11 @@ public class Category {
 		super();
 	}
 
+	public Category(int categoryID) {
+		super();
+		this.categoryID = categoryID;
+	}
+
 	public Category(int categoryID, String categoryName) {
 		super();
 		this.categoryID = categoryID;

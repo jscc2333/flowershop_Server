@@ -58,7 +58,7 @@ public class SignUpServlet extends HttpServlet {
 		User user = new User(username, password);
 		UserDao userDao = new UserDao();
 		int status_no = userDao.signUp(user);
-		HomeInstance hi = new HomeInstance(status_no, null, null, null, null);
+		HomeInstance hi = new HomeInstance(status_no, null, null);
 		Gson gson = new Gson();
 		String json_hi = gson.toJson(hi);
 		out.write(json_hi);

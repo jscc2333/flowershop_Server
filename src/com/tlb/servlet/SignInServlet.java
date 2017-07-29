@@ -65,7 +65,7 @@ public class SignInServlet extends HttpServlet {
 		// ").append(request.getContextPath());
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("application/json;charset=utf-8");
-		response.setContentType("text/plain; charset=utf-8");
+		response.setContentType("text/plain; charset=utf-8");	
 		PrintWriter out = response.getWriter();
 		String username = request.getParameter("username");
 		String password = request.getParameter("userpass");
@@ -81,11 +81,9 @@ public class SignInServlet extends HttpServlet {
 			FlowerDao flowerDao = new FlowerDao();
 			ArrayList<Category> categories = categoryDao.getCategory();
 			ArrayList<Flower> flowers = flowerDao.getFlowers();
-			ArrayList<Order> orders = orderDao.getOrders(username);
-			ArrayList<Tip> tips = tipDao.getTips();
-			hi = new HomeInstance(status_no, categories, flowers, orders, tips);
+			hi = new HomeInstance(status_no, categories, flowers);
 		} else {
-			hi = new HomeInstance(status_no, null, null, null, null);
+			hi = new HomeInstance(status_no, null, null);
 		}
 		String json_hi = gson.toJson(hi);
 		out.write(json_hi);
